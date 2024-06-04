@@ -1,0 +1,90 @@
+openapi: 3.0.0
+info:
+  title: Payment Block Service
+  version: "1.0"
+servers:
+  - url: 'https://api.yourdomain.com/v1'
+paths:
+  /clients/{clientId}/block:
+    post:
+      summary: Блокировка платежей клиента
+      operationId: blockClientPayments
+      tags:
+        - clients
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          description: Уникальный идентификатор клиента
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fraud:
+                  type: boolean
+                  description: Флаг мошенничества
+      responses:
+        '200':
+          description: Платежи клиента успешно заблокированы
+        '400':
+          description: Неверный запрос
+        '404':
+          description: Клиент не найден
+
+  /clients/{clientId}/unblock:
+    post:
+      summary: Разблокировка платежей клиента
+      operationId: unblockClientPayments
+      tags:
+        - clients
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          description: Уникальный идентификатор клиента
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Платежи клиента успешно разблокированы
+        '400':
+          description: Неверный запрос
+        '404':
+          description: Клиент не найден
+
+  /clients/{clientId}/status:
+    get:
+      summary: Проверка статуса блокировки клиента
+      operationId: checkClientBlockStatus
+      tags:
+        - clients
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          description: Уникальный идентификатор клиента
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Статус блокировки клиента
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isBlocked:
+                    type: boolean
+                    description: Статус блокировки
+                  isFraud:
+                    type: boolean
+                    description: Блокировка из-за мошенничества
+        '400':
+          description: Неверный запрос
+        '404':
+          description: Клиент не найден
